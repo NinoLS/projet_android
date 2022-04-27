@@ -34,4 +34,15 @@ function entityToJson($entity, $columns, $data){
     }
 }
 
+function unserializeValues($values){  
+    //crochets début & fin
+    $values = substr($values, 1, strlen($values)-2);
+
+    //séparer les valeurs ("|")
+    $v = explode("|", $values);
+    
+    //retour
+    return $v;
+}
+
 ?>
