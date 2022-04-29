@@ -15,6 +15,9 @@ $columns_array = explode(",", $columns);
 $values = secureInput($_GET["values"] ?? null);
 $values_array = unserializeValues($values);
 
+//id
+$id = intval(secureInput($_GET["id"] ?? -1));
+
 switch ($action) {
     case 'read':
         if(!empty($entity) && !empty($columns)){
@@ -64,9 +67,35 @@ switch ($action) {
             ]);
         }
         break;
-    
-    default:
-        # code...
+    case 'update':
+        if(!empty($entity) && (count($columns_array) == count($values_array)) && $id >= 0){
+            $request = "UPDATE $entity SET ";
+            $fields = [];
+            for ($c=0; $c < count($columns_array); $c++) { 
+                $fields[] = "{$columns_array[$c]} = '{$values_array[$c]}'";
+            }
+            $request .= implode(", ", $fields);
+            $request .= " WHERE id = $id";
+            $request .= empty($constraints)?"":" AND $constraints";
+            $result = mysqli_query($db, $request);
+
+            if($result === false){
+                echo json_encode([  
+                    "status" => REQUEST_ERROR,
+                    "message" => utf8_encode("Erreur requête")
+                ]);
+            } else {
+                echo json_encode([
+                    "status" => REQUEST_SUCCESS,
+                    "message" => utf8_encode("Mise à jour réussie")
+                ]);
+            }
+        } else {
+            echo json_encode([
+                "status" => REQUEST_ERROR,
+                "message" => utf8_encode("Impossible de lire les données")
+            ]);
+        }
         break;
 }
 
