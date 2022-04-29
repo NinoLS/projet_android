@@ -97,5 +97,29 @@ switch ($action) {
             ]);
         }
         break;
+    case 'delete':
+        if(!empty($entity) && $id >= 0){
+            $request = "DELETE FROM $entity WHERE id = $id";
+            $request .= empty($constraints)?"":" AND $constraints";
+            $result = mysqli_query($db, $request);
+
+            if($result === false){
+                echo json_encode([  
+                    "status" => REQUEST_ERROR,
+                    "message" => utf8_encode("Erreur requête")
+                ]);
+            } else {
+                echo json_encode([
+                    "status" => REQUEST_SUCCESS,
+                    "message" => utf8_encode(mysqli_affected_rows($db) . " suppression(s) réussie(s)")
+                ]);
+            }
+        } else {
+            echo json_encode([
+                "status" => REQUEST_ERROR,
+                "message" => utf8_encode("Impossible de lire les données")
+            ]);
+        }
+        break;
 }
 
