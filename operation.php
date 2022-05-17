@@ -33,7 +33,7 @@ switch ($action) {
             } else {
                 echo json_encode([
                     "status" => REQUEST_SUCCESS,
-                    "data" => entityToJson($entity, $columns_array, mysqli_fetch_all($result, MYSQLI_ASSOC))
+                    "data" => entityToJson($columns_array, mysqli_fetch_all($result, MYSQLI_ASSOC))
                 ]);
             }
         } else {

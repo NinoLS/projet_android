@@ -14,24 +14,16 @@ function secureInput($input){
     return trim(htmlspecialchars(mysqli_real_escape_string($db, $input)));
 }
 
-function entityToJson($entity, $columns, $data){
-    switch ($entity) {
-        case 'livre':
-            $json_entities = [];
-            foreach ($data as $e) {
-                $tmp = [];
-                foreach ($columns as $col) {
-                    $tmp[$col] = $e[$col];
-                }
-                $json_entities[] = $tmp;
-            }
-            return json_encode($json_entities);
-            break;
-        
-        default:
-            # code...
-            break;
+function entityToJson($columns, $data){
+    $json_entities = [];
+    foreach ($data as $e) {
+        $tmp = [];
+        foreach ($columns as $col) {
+            $tmp[$col] = $e[$col];
+        }
+        $json_entities[] = $tmp;
     }
+    return $json_entities;
 }
 
 function unserializeValues($values){  
