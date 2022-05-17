@@ -18,8 +18,8 @@ function entityToJson($columns, $data){
     $json_entities = [];
     foreach ($data as $e) {
         $tmp = [];
-        foreach ($columns as $col) {
-            $tmp[$col] = $e[$col];
+        for ($c=0; $c < count($e); $c++) { 
+            $tmp[$columns[$c]] = $e[$c];
         }
         $json_entities[] = $tmp;
     }
