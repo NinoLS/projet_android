@@ -58,7 +58,6 @@ switch ($action) {
 
             $request = "INSERT INTO $entity ($columns) VALUES ('".implode("','", $values_array)."')";
             $request .= empty($constraints)?"":" WHERE $constraints";
-            var_dump($request);die();
             $result = mysqli_query($db, $request);
 
             if($result === false){
