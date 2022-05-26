@@ -3,6 +3,9 @@
 require_once("database.php");
 require_once("security.php");
 
+//clé secondaires
+$foreign_keys = ["livreID"];
+
 $action = secureInput($_GET["action"] ?? null);
 $entity = secureInput($_GET["entity"] ?? null);
 $constraints = secureInput($_GET["constraints"] ?? null);
@@ -45,8 +48,17 @@ switch ($action) {
         break;
     case 'create':
         if(!empty($entity) && (count($columns_array) == count($values_array))){
+            //clé étrangère
+            if(!empty(array_intersect($foreign_keys, $columns_array))){
+                $position = array_search("livreID", $columns_array);
+                $values_array[$position]--;
+                $real_id = mysqli_fetch_row(mysqli_query($db, "SELECT id FROM livre LIMIT 1 OFFSET {$values_array[$position]}"))[0];
+                $values_array[$position] = $real_id;
+            }
+
             $request = "INSERT INTO $entity ($columns) VALUES ('".implode("','", $values_array)."')";
             $request .= empty($constraints)?"":" WHERE $constraints";
+            var_dump($request);die();
             $result = mysqli_query($db, $request);
 
             if($result === false){
